@@ -65,7 +65,7 @@ namespace all_tests
 		TEST_METHOD(test_03a)
 		{
 			std::vector<int> v = { 1, 5, 10 };
-			std::transform(v.begin(), v.end(), v.begin(), [](int& n) {return n*n*n; });
+			std::transform(v.begin(), v.end(), v.begin(), [](int n) {return n*n*n; });
 			Assert::AreEqual(3ull, v.size());
 			Assert::AreEqual(1, v[0]);
 			Assert::AreEqual(125, v[1]);
@@ -201,8 +201,11 @@ namespace all_tests
 		TEST_METHOD(test_12)
 		{
 			std::vector<int> atp_points{ 8445, 7480, 6220, 5300, 5285 };
+			std::vector<int> v;
+			std::adjacent_difference(atp_points.begin(), atp_points.end(), std::back_inserter(v));
+			std::transform(v.begin(), v.end(), v.begin(), [](int n) {return abs(n); });
 			// the most interesting match is the one with the smallest difference
-			auto smallest_difference = *(std::adjacent_difference(atp_points.begin(), atp_points.end(), atp_points.begin(), [](int a, int b) { return b - a; })-1);
+			auto smallest_difference = *std::min_element(v.begin(), v.end());
 			Assert::AreEqual(15, smallest_difference);
 		}
 	};
